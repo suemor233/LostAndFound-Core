@@ -1,7 +1,6 @@
-import { config } from 'dotenv'
+import 'zx-cjs/globals'
 
 function registerEnv() {
-  config()
 }
 
 export function register() {
