@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: nest-template
+    build: .
+    command: node index.js --db_host=mongo --color
+    environment:
+      - TZ=Asia/Shanghai
+      - NODE_ENV=production
+    volumes:
+      - ./data/nest-template:/root/.nest-template
+    ports:
+      - '2349:2349'
+    depends_on:
+      - mongo
+    links:
+      - mongo
+    networks:
+      - app-network
+    restart: always
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://127.0.0.1:2349/api/v2/ping']
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - ./data/db:/data/db
+    ports:
+      - '3344:27017'
+    networks:
+      - app-network
+    restart: always
+
+networks:
+  app-network:
+    driver: bridge
