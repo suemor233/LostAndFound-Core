@@ -45,10 +45,6 @@ jobs:
           load: true
           tags: ${{ steps.meta.outputs.tags }},innei/mx-server:latest
           labels: ${{ steps.meta.outputs.labels }}
-      - name: Test
-        run: |
-          bash ./scripts/workflow/test-docker.sh
-          sudo rm -rf ./data
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v3
