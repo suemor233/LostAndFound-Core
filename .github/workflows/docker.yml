@@ -51,5 +51,5 @@ jobs:
         with:
           context: .
           push: ${{ startsWith(github.ref, 'refs/tags/v') }}
-          tags: ${{ steps.meta.outputs.tags }},innei/lost-and-found:latest
+          tags: ${{ steps.meta.outputs.tags }},suemor/lost-and-found:latest
           labels: ${{ steps.meta.outputs.labels }}
