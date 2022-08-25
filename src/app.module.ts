@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common'
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core'
-import { ConfigModule } from 'nestjs-dotenv'
 
 import { AppController } from './app.controller'
 import { AllExceptionsFilter } from './common/filters/any-exception.filter'
@@ -10,7 +9,7 @@ import { DatabaseModule } from './processors/database/database.module'
 import { HelperModule } from './processors/helper/helper.module'
 
 @Module({
-  imports: [DatabaseModule, UserModule, ConfigModule.forRoot(),HelperModule],
+  imports: [DatabaseModule, UserModule, HelperModule],
   controllers: [AppController],
   providers: [
     {

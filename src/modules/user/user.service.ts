@@ -1,4 +1,3 @@
-import { ConfigService } from 'nestjs-dotenv'
 import { Repository } from 'typeorm'
 
 import {
@@ -8,22 +7,20 @@ import {
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 
+import { WX_Secret } from '~/app.config'
 import { HttpService } from '~/processors/helper/helper.http.service'
 
+import { AuthService } from '../auth/auth.service'
 import { LoginUserDto } from './user.dto'
 import { User } from './user.entity'
-import { AuthService } from '../auth/auth.service'
 
 @Injectable()
 export class UserService {
-
- 
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-    private readonly configService: ConfigService,
     private readonly httpService: HttpService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
   ) {}
 
   async createUser(openid: string, user: LoginUserDto) {
@@ -59,17 +56,13 @@ export class UserService {
     return !!(await this.usersRepository.findOneBy({ openid }))
   }
 
-  async getUserInfoByToken(token:string) {
+  async getUserInfoByToken(token: string) {
     // this.authService.verifyPayload(token)
   }
 
   wxUser(id: string) {
     return this.httpService.axiosRef.get(
-      `https://api.weixin.qq.com/sns/jscode2session?appid=${this.configService.get(
-        'AppID',
-      )}&secret=${this.configService.get(
-        'AppSecret',
-      )}&js_code=${id}&grant_type=authorization_code`,
+      `https://api.weixin.qq.com/sns/jscode2session?appid=${WX_Secret.appId}&secret=${WX_Secret.AppSecret}&js_code=${id}&grant_type=authorization_code`,
     )
   }
 }

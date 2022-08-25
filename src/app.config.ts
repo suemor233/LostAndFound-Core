@@ -1,5 +1,7 @@
-import { isDev } from './global/env.global'
 import { argv } from 'zx-cjs'
+
+import { isDev } from './global/env.global'
+
 export const PORT = 2349
 export const API_VERSION = 2
 
@@ -35,3 +37,7 @@ export const SECURITY = {
   jwtExpire: '7d',
 }
 
+export const WX_Secret = {
+  appId: process.env.AppID,
+  AppSecret: process.env.AppSecret,
+}
