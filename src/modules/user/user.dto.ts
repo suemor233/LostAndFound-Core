@@ -1,32 +1,21 @@
 import {
-  IsEmail,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
+  IsString, IsUrl,
 } from 'class-validator'
 
 import { ApiProperty } from '@nestjs/swagger'
-
-
-
-export class LoginDto {
+export class LoginUserDto {
   @ApiProperty({ required: true })
-  @IsString({ message: '用户名？' })
-  username: string
+  @IsString({ message: '微信code' })
+  id: string
 
   @ApiProperty({ required: true })
-  @IsString({ message: '密码？' })
-  password: string
-}
+  @IsString({ message: '用户名' })
+  nickName: string
 
-export class UserOptionDto extends LoginDto{
-  @ApiProperty({ required: false, example: 'example@example.com' })
-  @IsEmail()
-  @IsNotEmpty()
-  @IsOptional()
-  readonly mail: string
+  @ApiProperty({ required: true })
+  @IsUrl({ require_protocol: true }, { message: '请更正为正确的网址' })
+  avatarUrl: string
 }
-
 
 
 

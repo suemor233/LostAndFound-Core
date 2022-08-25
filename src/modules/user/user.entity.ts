@@ -5,16 +5,11 @@ export class User {
   id: string;
 
   @Column({unique: true})
-  username: string;
-
-  @Column({select:false})
-  password: string;
-
-  @Column({select:false})
-  authCode: string;
+  openid: string;
 
   @Column()
-  mail: string;
+  nickName: string;
 
-
+  @Column()
+  avatarUrl: string;
 }

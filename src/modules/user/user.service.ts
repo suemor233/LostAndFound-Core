@@ -1,64 +1,75 @@
-import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { UserOptionDto } from './user.dto';
-import { User } from './user.entity';
-import { nanoid } from 'nanoid'
-import { hashSync,compareSync } from 'bcrypt'
-import { sleep } from '~/utils/tool.util';
+import { ConfigService } from 'nestjs-dotenv'
+import { Repository } from 'typeorm'
+
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+
+import { HttpService } from '~/processors/helper/helper.http.service'
+
+import { LoginUserDto } from './user.dto'
+import { User } from './user.entity'
+import { AuthService } from '../auth/auth.service'
 
 @Injectable()
 export class UserService {
+
+ 
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>
+    private usersRepository: Repository<User>,
+    private readonly configService: ConfigService,
+    private readonly httpService: HttpService,
+    private readonly authService: AuthService
   ) {}
 
-  async createUser(user: UserOptionDto) {
-    const hasMaster = await this.hasMaster()
-
+  async createUser(openid: string, user: LoginUserDto) {
+    const hasUser = await this.hasUser(openid)
     // 禁止注册两个以上账户
-    if (hasMaster) {
-      throw new BadRequestException('我已经有一个主人了哦')
+    if (hasUser) {
+      throw new BadRequestException('用户已经存在')
     }
-    user.password = hashSync(user.password, 6)
-    const authCode = nanoid(10)
 
-    const res = await this.usersRepository.save({
-      ...user,
-      authCode
+    await this.usersRepository.save({
+      openid,
+      nickName: user.nickName,
+      avatarUrl: user.avatarUrl,
     })
-    return { username: res.username, authCode: res.authCode }
+    return openid
   }
 
-  async login(username: string, password: string) {
-    const user = await this.usersRepository.findOne({
-      where: {
-        username
-      },
-      select:{
-        password:true
-      }
-    })
-    if (!user) {
-      await sleep(1000)
-      throw new ForbiddenException('用户名不正确')
+  async login(user: LoginUserDto) {
+    const { data } = await this.wxUser(user.id)
+    if (!data.openid) {
+      throw new ForbiddenException('无效用户')
     }
-    if (!compareSync(password, user.password)) {
-      await sleep(1000)
-      throw new ForbiddenException('密码不正确')
-    }
-
-    return user
+    !(await this.hasUser(data.openid)) &&
+      (await this.createUser(data.openid, user))
+    return await this.findById(data.openid)
   }
 
-  findAll(): Promise<User[]> {
-    return this.usersRepository.find();
+  async findById(openid: string) {
+    return await this.usersRepository.findOneBy({ openid })
   }
 
+  async hasUser(openid: string) {
+    return !!(await this.usersRepository.findOneBy({ openid }))
+  }
 
+  async getUserInfoByToken(token:string) {
+    // this.authService.verifyPayload(token)
+  }
 
-  async hasMaster() {
-    return !!(await this.usersRepository.count())
+  wxUser(id: string) {
+    return this.httpService.axiosRef.get(
+      `https://api.weixin.qq.com/sns/jscode2session?appid=${this.configService.get(
+        'AppID',
+      )}&secret=${this.configService.get(
+        'AppSecret',
+      )}&js_code=${id}&grant_type=authorization_code`,
+    )
   }
 }

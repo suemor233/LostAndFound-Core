@@ -16,7 +16,6 @@ export class AuthGuard extends _AuthGuard('jwt') implements CanActivate {
       return true
     }
 
-
     return super.canActivate(context) as any
   }
 

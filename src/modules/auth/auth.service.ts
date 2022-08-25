@@ -13,14 +13,14 @@ export class AuthService {
     @InjectRepository(User) private usersRepository: Repository<User>
   ) {}
 
-  async signToken(id: string) {
-    const user = await this.usersRepository.findOne(id as any)
+  async signToken(openid: string) {
+    const user = await this.usersRepository.findOneBy({openid} )
     if (!user) {
       throw new MasterLostException()
     }
-    const authCode = user.authCode
+    const authCode = user.openid
     const payload = {
-      id,
+      openid,
       authCode,
     }
     
@@ -38,6 +38,6 @@ export class AuthService {
       throw new MasterLostException()
     }
 
-    return user && user.authCode === payload.authCode ? user : null
+    return user && user.openid === payload.openid ? user : null
   }
 }
