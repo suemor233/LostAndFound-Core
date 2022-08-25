@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    container_name: nest-template
+    container_name: LostAndFound-Core
     build: .
     command: node index.js --db_host=mongo --color
     environment:
