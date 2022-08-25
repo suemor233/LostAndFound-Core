@@ -7,12 +7,12 @@ import {
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 
-import { WX_Secret } from '~/app.config'
 import { HttpService } from '~/processors/helper/helper.http.service'
 
 import { AuthService } from '../auth/auth.service'
 import { LoginUserDto } from './user.dto'
 import { User } from './user.entity'
+import { WX_Secret } from '~/app.config'
 
 @Injectable()
 export class UserService {
