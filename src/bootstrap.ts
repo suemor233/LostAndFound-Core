@@ -58,7 +58,7 @@ export async function bootstrap() {
     SwaggerModule.setup('api-docs', app, document)
   }
 
-  await app.listen(+PORT, '192.168.1.8', async () => {
+  await app.listen(+PORT, '0.0.0.0', async () => {
     if (isDev) {
       logger.debug(`Server listen on:: http://localhost:${PORT}`)
       logger.debug(`swagger文档: http://localhost:${PORT}/api-docs`)
