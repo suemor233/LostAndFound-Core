@@ -39,7 +39,6 @@ export class UserService {
   }
 
   async login(user: LoginUserDto) {
-    console.log(!(await this.hasUser('123123')))
     const { data } = await this.wxUser(user.id)
     if (!data.openid) {
       throw new ForbiddenException('无效用户')
@@ -62,7 +61,6 @@ export class UserService {
   }
 
   wxUser(id: string) {
-    console.log(WX_Secret.appId,WX_Secret.AppSecret,id);
     return this.httpService.axiosRef.get(
       `https://api.weixin.qq.com/sns/jscode2session?appid=${WX_Secret.appId}&secret=${WX_Secret.AppSecret}&js_code=${id}&grant_type=authorization_code`,
     )

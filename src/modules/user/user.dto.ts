@@ -10,11 +10,11 @@ export class LoginUserDto {
 
   @ApiProperty({ required: true })
   @IsString({ message: '用户名' })
-  nickName: string
+  nickName?: string
 
   @ApiProperty({ required: true })
   @IsUrl({ require_protocol: true }, { message: '请更正为正确的网址' })
-  avatarUrl: string
+  avatarUrl?: string
 }
 
 

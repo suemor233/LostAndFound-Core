@@ -31,7 +31,6 @@ export class AuthService {
     const user = await this.usersRepository.findOneBy({
         openid:payload.authCode
     })
-    console.log(user);
     if (!user) {
       throw new MasterLostException()
     }
