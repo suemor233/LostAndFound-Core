@@ -2,8 +2,8 @@
   "name": "LostAndFound-Core",
   "version": "0.0.3",
   "description": "",
-  "author": "suemor <https://suemor.com>",
-  "private": true,
+  "author": "suemor",
+  "private": "false",
   "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
