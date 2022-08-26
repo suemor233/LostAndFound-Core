@@ -20,24 +20,22 @@ export class AuthService {
     }
     const authCode = user.openid
     const payload = {
-      openid,
-      authCode,
+      authCode
     }
     
     return this.jwtService.sign(payload)
   }
 
   async verifyPayload(payload: JwtPayload) {
-    const user = await this.usersRepository.findOne({
-      where:{
-        id:payload._id
-      }
+  
+    const user = await this.usersRepository.findOneBy({
+        openid:payload.authCode
     })
-
+    console.log(user);
     if (!user) {
       throw new MasterLostException()
     }
 
-    return user && user.openid === payload.openid ? user : null
+    return user && user.openid === payload.authCode ? user : null
   }
 }

@@ -27,6 +27,7 @@ export class UserController {
       token: await this.authService.signToken(user.openid),
       expiresIn: 7,
     }
+ 
   }
 
   @Get()
@@ -38,6 +39,12 @@ export class UserController {
   async getUserInfo( @CurrentUser() user: LoginUserDto,) {
     return user
   }
+
+  // @Get('test')
+  // @ApiOperation({ summary: '测试' })
+  // test(pwd:string) {
+  //   return this.
+  // }
 
   @Get('check_logged')
   @ApiOperation({ summary: '判断当前 Token 是否有效 ' })
