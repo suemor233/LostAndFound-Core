@@ -64,6 +64,10 @@ export async function bootstrap() {
       logger.debug(`Server listen on:: http://localhost:${PORT}`)
       logger.debug(`swagger文档: http://localhost:${PORT}/api-docs`)
     }
+    console.log(process.env.app_id,' 11111111111');
+    console.log(process.env.APP_ID,' 22222');
+    console.log(argv.app_id,' 33333');
+    console.log(argv.APP_ID,' 44444');
   })
 
   if (module.hot) {
