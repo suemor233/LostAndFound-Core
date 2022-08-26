@@ -1,8 +1,5 @@
 import { Logger, ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
-
-
-
 import { API_VERSION, CROSS_DOMAIN, PORT } from './app.config'
 import { AppModule } from './app.module'
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
@@ -47,7 +44,7 @@ export async function bootstrap() {
     const { DocumentBuilder, SwaggerModule } = await import('@nestjs/swagger')
     const options = new DocumentBuilder()
       .setTitle('API')
-      .setDescription('nest-template API')
+      .setDescription('LostAndFound API')
       .setVersion(`${API_VERSION}`)
       .addSecurity('bearer', {
         type: 'http',
@@ -64,10 +61,6 @@ export async function bootstrap() {
       logger.debug(`Server listen on:: http://localhost:${PORT}`)
       logger.debug(`swagger文档: http://localhost:${PORT}/api-docs`)
     }
-    console.log(process.env.app_id,' 11111111111');
-    console.log(process.env.APP_ID,' 22222');
-    console.log(argv.app_id,' 33333');
-    console.log(argv.APP_ID,' 44444');
   })
 
   if (module.hot) {

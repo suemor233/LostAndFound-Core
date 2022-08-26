@@ -38,6 +38,6 @@ export const SECURITY = {
 }
 
 export const WX_Secret = {
-  appId: argv.app_id,
-  AppSecret: argv.app_secret,
+  appId: argv.app_id || process.env.APP_ID,
+  AppSecret: argv.app_secret || process.env.APP_SECRET,
 }
