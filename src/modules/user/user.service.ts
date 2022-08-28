@@ -9,18 +9,17 @@ import { InjectRepository } from '@nestjs/typeorm'
 
 import { HttpService } from '~/processors/helper/helper.http.service'
 
-import { AuthService } from '../auth/auth.service'
 import { LoginUserDto } from './user.dto'
 import { User } from './user.entity'
 import { WX_Secret } from '~/app.config'
 
 @Injectable()
 export class UserService {
+
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private readonly httpService: HttpService,
-    private readonly authService: AuthService,
   ) {}
 
   async createUser(openid: string, user: LoginUserDto) {
@@ -64,5 +63,9 @@ export class UserService {
     return this.httpService.axiosRef.get(
       `https://api.weixin.qq.com/sns/jscode2session?appid=${WX_Secret.appId}&secret=${WX_Secret.AppSecret}&js_code=${id}&grant_type=authorization_code`,
     )
+  }
+
+  patchUserData(user: LoginUserDto, body: LoginUserDto) {
+    
   }
 }

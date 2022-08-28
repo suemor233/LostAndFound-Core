@@ -1,4 +1,5 @@
 import { Entity, Column, ObjectIdColumn } from 'typeorm';
+import { Lost } from '../lost/lost.entity';
 @Entity()
 export class User {
   @ObjectIdColumn({ name: '_id' })
@@ -12,4 +13,8 @@ export class User {
 
   @Column()
   avatarUrl: string;
+
+
+  @Column(type => Lost)
+  lost: Lost[];
 }
