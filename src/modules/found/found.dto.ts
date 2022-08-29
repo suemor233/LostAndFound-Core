@@ -26,6 +26,8 @@ export class FoundDto {
 
   uid?:string
 
+  state?:boolean
+
 }
 
 

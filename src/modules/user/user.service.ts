@@ -13,8 +13,10 @@ import { LoginUserDto } from './user.dto'
 import { User } from './user.entity'
 import { WX_Secret } from '~/app.config'
 
+
 @Injectable()
 export class UserService {
+
 
   constructor(
     @InjectRepository(User)
@@ -53,6 +55,11 @@ export class UserService {
 
   async hasUser(openid: string) {
     return !!(await this.usersRepository.findOneBy({ openid }))
+  }
+
+  async getUserInfo(user: LoginUserDto) {
+    const _user = user
+    
   }
 
   async getUserInfoByToken(token: string) {

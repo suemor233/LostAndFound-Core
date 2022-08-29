@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common'
+import { Body, Controller, Get, Post } from '@nestjs/common'
 import { ApiOperation } from '@nestjs/swagger'
 
 import { Auth } from '~/common/decorator/auth.decorator'
@@ -19,5 +19,14 @@ export class LostController {
   @Auth()
   async login( @CurrentUser() user: User,@Body() loginDto: LostDto) {
     return this.lostService.save(user,loginDto)
+  }
+
+  @Get()
+  @ApiOperation({ summary: '丢失中和已找回的数量' })
+  @Auth()
+  async total( @CurrentUser() user: User) {
+    return {
+      lost:await this.lostService.total(user)
+    }
   }
 }

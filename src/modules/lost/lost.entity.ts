@@ -1,4 +1,4 @@
-import { Entity, Column, ObjectIdColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, ObjectIdColumn, CreateDateColumn, UpdateDateColumn, BeforeInsert } from 'typeorm';
 @Entity()
 export class Lost {
   @ObjectIdColumn({ name: '_id' })
@@ -21,6 +21,10 @@ export class Lost {
 
   @Column()
   detail: Date;
+
+  
+  @Column('boolean',{default:true})
+  state = true
 
   @CreateDateColumn()
   created:Date

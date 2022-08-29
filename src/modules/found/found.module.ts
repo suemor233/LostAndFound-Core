@@ -9,5 +9,6 @@ import { Found } from './found.entity'
   imports: [TypeOrmModule.forFeature([Found])],
   controllers: [FoundController],
   providers: [FoundService],
+  exports:[FoundService]
 })
 export class FoundModule {}

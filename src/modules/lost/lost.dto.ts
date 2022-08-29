@@ -25,6 +25,8 @@ export class LostDto {
 
   uid?:string
 
+  state?:boolean
+
 }
 
 

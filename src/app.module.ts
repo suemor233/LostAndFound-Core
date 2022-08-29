@@ -9,6 +9,7 @@ import { LostModule } from './modules/lost/lost.module'
 import { UserModule } from './modules/user/user.module'
 import { DatabaseModule } from './processors/database/database.module'
 import { HelperModule } from './processors/helper/helper.module'
+import { AggregateModule } from './modules/aggregate/aggregate.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { HelperModule } from './processors/helper/helper.module'
     FoundModule,
     LostModule,
     FoundModule,
+    AggregateModule,
   ],
   controllers: [AppController],
   providers: [

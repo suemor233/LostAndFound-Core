@@ -1,8 +1,7 @@
 import { Body, Controller, Get, HttpCode, Patch, Post, Req } from '@nestjs/common'
 import { ApiOperation } from '@nestjs/swagger'
 import { ApiName } from '~/common/decorator/openapi.decorator'
-import { Request } from 'express'
-import {  LoginUserDto } from './user.dto'
+import { LoginUserDto } from './user.dto'
 import { UserService } from './user.service'
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '~/common/decorator/auth.decorator'
@@ -46,7 +45,6 @@ export class UserController {
     @Body() body: LoginUserDto,
     @CurrentUser() user: LoginUserDto,
   ) {
-    console.log(body,user);
     return await this.userService.patchUserData(user, body)
   }
 

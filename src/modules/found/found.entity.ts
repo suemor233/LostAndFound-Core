@@ -22,6 +22,9 @@ export class Found {
   @Column()
   detail: Date;
 
+  @Column({default:true})
+  state:boolean
+
   @CreateDateColumn()
   created:Date
 
