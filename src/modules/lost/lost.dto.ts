@@ -1,4 +1,5 @@
 import {
+  IsOptional,
   IsString,
 } from 'class-validator'
 
@@ -23,6 +24,10 @@ export class LostDto {
   @IsString({ message: '详情不能为空' })
   detail?: string
 
+  @ApiProperty({ required: true,nullable:false })
+  @IsOptional()
+  image?: string
+  
   uid?:string
 
   state?:boolean

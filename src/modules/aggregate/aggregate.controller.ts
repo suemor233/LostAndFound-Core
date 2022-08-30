@@ -8,7 +8,6 @@ import { User } from '~/modules/user/user.entity'
 
 import { FoundService } from '../found/found.service'
 import { LostService } from '../lost/lost.service'
-import { PageDto } from './aggregate.dto'
 import { AggregateService } from './aggregate.service'
 
 @Controller('aggregate')
@@ -45,6 +44,48 @@ export class AggregateController {
   @Get('/list')
   @ApiOperation({ summary: '分页获取失物信息' })
   async lostFoundList(
+    @Query('pageCurrent') pageCurrent: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    console.log(pageCurrent, pageSize);
+    const lostFound = await this.aggregateService.lostFoundList(pageCurrent, pageSize)
+    return {
+      lostFound,
+      totalCount:lostFound[0].lengthCurrent + lostFound[1].lengthCurrent,
+    }
+  }
+
+  @Get('/last')
+  @ApiOperation({ summary: '分页获取失物信息' })
+  async lostFoundList2(
+    @Query('pageCurrent') pageCurrent: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    console.log(pageCurrent, pageSize);
+    const lostFound = await this.aggregateService.lostFoundList(pageCurrent, pageSize)
+    return {
+      lostFound,
+      totalCount:lostFound[0].lengthCurrent + lostFound[1].lengthCurrent,
+    }
+  }
+
+  @Get('/lost')
+  @ApiOperation({ summary: '分页获取失物信息' })
+  async lostFoundList3(
+    @Query('pageCurrent') pageCurrent: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    console.log(pageCurrent, pageSize);
+    const lostFound = await this.aggregateService.lostFoundList(pageCurrent, pageSize)
+    return {
+      lostFound,
+      totalCount:lostFound[0].lengthCurrent + lostFound[1].lengthCurrent,
+    }
+  }
+
+  @Get('/found')
+  @ApiOperation({ summary: '分页获取失物信息' })
+  async lostFoundList4(
     @Query('pageCurrent') pageCurrent: number,
     @Query('pageSize') pageSize: number,
   ) {

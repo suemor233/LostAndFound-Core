@@ -22,7 +22,9 @@ export class Lost {
   @Column()
   detail: Date;
 
-  
+  @Column()
+  image: string;
+
   @Column('boolean',{default:true})
   state = true
 

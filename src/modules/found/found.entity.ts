@@ -22,6 +22,9 @@ export class Found {
   @Column()
   detail: Date;
 
+  @Column()
+  image: string;
+
   @Column({default:true})
   state:boolean
 

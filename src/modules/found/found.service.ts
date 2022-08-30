@@ -15,6 +15,7 @@ export class FoundService {
   ) {}
 
   async save(user: User, foundDto: FoundDto) {
+    console.log(foundDto);
     foundDto.foundTime = new Date(foundDto.foundTime)
     foundDto.uid = user.id
     foundDto.state = true

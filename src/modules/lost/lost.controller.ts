@@ -17,8 +17,8 @@ export class LostController {
   @Post()
   @ApiOperation({ summary: '创建找丢失' })
   @Auth()
-  async login( @CurrentUser() user: User,@Body() loginDto: LostDto) {
-    return this.lostService.save(user,loginDto)
+  async login( @CurrentUser() user: User,@Body() lostDto: LostDto) {
+    return this.lostService.save(user,lostDto)
   }
 
   @Get()
