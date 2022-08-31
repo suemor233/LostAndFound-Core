@@ -1,4 +1,4 @@
-import { abort } from 'process'
+import { ObjectId } from 'bson'
 import { Repository } from 'typeorm'
 
 import { Injectable } from '@nestjs/common'
@@ -7,22 +7,32 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { User } from '../user/user.entity'
 import { LostDto } from './lost.dto'
 import { Lost } from './lost.entity'
+import { PhotosService } from '../photos/photos.service';
 
 @Injectable()
 export class LostService {
+
   constructor(
     @InjectRepository(Lost)
     private lostRepository: Repository<Lost>,
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private photosService: PhotosService,
   ) {}
 
   async save(user: User, LostDto: LostDto) {
     LostDto.lostTime = new Date(LostDto.lostTime)
     LostDto.uid = user.id
     LostDto.state = true
-    this.lostRepository.save(LostDto)
-    return 'ok'
+    LostDto.image = []
+    // LostDto.image.map(async(item) => await this.photosService.uploadPhoto(item))
+    return this.lostRepository.save(LostDto)
+  }
+
+  async addImage(url: string, id: string) {
+    const lostUpdate = await this.lostRepository.findOneBy({
+      _id: new ObjectId(id),
+    } as any)
+    lostUpdate.image.push(url)
+    return this.lostRepository.save(lostUpdate)
   }
 
   async total(user: User) {
@@ -48,5 +58,10 @@ export class LostService {
       totalCount,
       totalPages,
     }
+  }
+
+  async uploadPhoto(file: Express.Multer.File, id: any) {
+    const img = await this.photosService.uploadPhoto(file)
+    return this.addImage(img,id)
   }
 }

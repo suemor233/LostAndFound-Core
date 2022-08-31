@@ -1,8 +1,9 @@
-import { Entity, Column, ObjectIdColumn, CreateDateColumn, UpdateDateColumn, BeforeInsert } from 'typeorm';
+import { Entity, Column, ObjectIdColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { ObjectId } from 'bson';
 @Entity()
 export class Lost {
-  @ObjectIdColumn({ name: '_id' })
-  id: string;
+  @ObjectIdColumn()
+  id: ObjectId
 
   @Column()
   uid: string;
@@ -23,7 +24,7 @@ export class Lost {
   detail: Date;
 
   @Column()
-  image: string;
+  image: string[];
 
   @Column('boolean',{default:true})
   state = true

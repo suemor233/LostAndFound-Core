@@ -47,7 +47,6 @@ export class AggregateController {
     @Query('pageCurrent') pageCurrent: number,
     @Query('pageSize') pageSize: number,
   ) {
-    console.log(pageCurrent, pageSize);
     const lostFound = await this.aggregateService.lostFoundList(pageCurrent, pageSize)
     return {
       lostFound,
@@ -61,7 +60,6 @@ export class AggregateController {
     @Query('pageCurrent') pageCurrent: number,
     @Query('pageSize') pageSize: number,
   ) {
-    console.log(pageCurrent, pageSize);
     const lostFound = await this.aggregateService.lostFoundList(pageCurrent, pageSize)
     return {
       lostFound,
@@ -75,7 +73,6 @@ export class AggregateController {
     @Query('pageCurrent') pageCurrent: number,
     @Query('pageSize') pageSize: number,
   ) {
-    console.log(pageCurrent, pageSize);
     const lostFound = await this.aggregateService.lostFoundList(pageCurrent, pageSize)
     return {
       lostFound,
@@ -89,7 +86,6 @@ export class AggregateController {
     @Query('pageCurrent') pageCurrent: number,
     @Query('pageSize') pageSize: number,
   ) {
-    console.log(pageCurrent, pageSize);
     const lostFound = await this.aggregateService.lostFoundList(pageCurrent, pageSize)
     return {
       lostFound,

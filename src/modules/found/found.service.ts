@@ -6,21 +6,32 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { User } from '../user/user.entity'
 import { FoundDto } from './found.dto'
 import { Found } from './found.entity'
+import { ObjectId } from 'bson'
+import { PhotosService } from '../photos/photos.service';
 
 @Injectable()
 export class FoundService {
   constructor(
     @InjectRepository(Found)
     private foundRepository: Repository<Found>,
+    private photosService: PhotosService,
   ) {}
 
   async save(user: User, foundDto: FoundDto) {
-    console.log(foundDto);
     foundDto.foundTime = new Date(foundDto.foundTime)
     foundDto.uid = user.id
     foundDto.state = true
-    this.foundRepository.save(foundDto)
-    return 'ok'
+    foundDto.image = []
+
+    return this.foundRepository.save(foundDto)
+  }
+
+  async addImage(url: string, id: string) {
+    const foundUpdate = await this.foundRepository.findOneBy({
+      _id: new ObjectId(id),
+    } as any)
+    foundUpdate.image.push(url)
+    return this.foundRepository.save(foundUpdate)
   }
 
   async total(user: User) {
@@ -46,5 +57,10 @@ export class FoundService {
       totalCount,
       totalPages,
     }
+  }
+
+  async uploadPhoto(file: Express.Multer.File, id: any) {
+    const img = await this.photosService.uploadPhoto(file)
+    return this.addImage(img,id)
   }
 }

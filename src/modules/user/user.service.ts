@@ -11,7 +11,8 @@ import { HttpService } from '~/processors/helper/helper.http.service'
 
 import { LoginUserDto } from './user.dto'
 import { User } from './user.entity'
-import { WX_Secret } from '~/app.config'
+import { WX_SECRET } from '~/app.config'
+import { AuthService } from '../auth/auth.service';
 
 
 @Injectable()
@@ -21,8 +22,7 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-    private readonly httpService: HttpService,
-  ) {}
+    private readonly httpService: HttpService  ) {}
 
   async createUser(openid: string, user: LoginUserDto) {
     const hasUser = await this.hasUser(openid)
@@ -68,7 +68,7 @@ export class UserService {
 
   wxUser(id: string) {
     return this.httpService.axiosRef.get(
-      `https://api.weixin.qq.com/sns/jscode2session?appid=${WX_Secret.appId}&secret=${WX_Secret.AppSecret}&js_code=${id}&grant_type=authorization_code`,
+      `https://api.weixin.qq.com/sns/jscode2session?appid=${WX_SECRET.appId}&secret=${WX_SECRET.AppSecret}&js_code=${id}&grant_type=authorization_code`,
     )
   }
 

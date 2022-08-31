@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Post } from '@nestjs/common'
+import { Body, Controller, Get, Post, UploadedFile, UseInterceptors } from '@nestjs/common'
+import { FileInterceptor } from '@nestjs/platform-express'
 import { ApiOperation } from '@nestjs/swagger'
 
 import { Auth } from '~/common/decorator/auth.decorator'
@@ -28,5 +29,12 @@ export class LostController {
     return {
       lost:await this.lostService.total(user)
     }
+  }
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file'))
+  @Auth()
+  async uploadPhoto(@UploadedFile() file: Express.Multer.File,@Body() body) {
+    return this.lostService.uploadPhoto(file,body.id);
   }
 }

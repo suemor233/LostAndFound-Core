@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator'
+import { IsString } from 'class-validator'
 
 import { ApiProperty } from '@nestjs/swagger'
 
@@ -23,10 +23,9 @@ export class FoundDto {
   @IsString({ message: '详情不能为空' })
   detail?: string
 
-  @ApiProperty({ required: true,nullable:false })
-  @IsOptional()
-  image?: string
-
+  @ApiProperty({ nullable:false })
+  image?: string[]
+  
   uid?: string
 
   state?: boolean

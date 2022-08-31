@@ -1,8 +1,9 @@
+import { ObjectId } from 'bson';
 import { Entity, Column, ObjectIdColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 @Entity()
 export class Found {
-  @ObjectIdColumn({ name: '_id' })
-  id: string;
+  @ObjectIdColumn()
+  id: ObjectId
 
   @Column()
   uid: string;
@@ -23,7 +24,7 @@ export class Found {
   detail: Date;
 
   @Column()
-  image: string;
+  image: string[];
 
   @Column({default:true})
   state:boolean

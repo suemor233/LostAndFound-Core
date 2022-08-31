@@ -4,7 +4,7 @@ services:
   app:
     container_name: LostAndFound-Core
     image: suemor/lost-and-found:latest
-    command: node index.js --db_host=mongo --app_id=${APP_ID} --app_secret=${APP_SECRET} --color
+    command: node index.js --db_host=mongo --app_id=${APP_ID} --app_secret=${APP_SECRET} --qn_ak=${QN_AK} --qn_sk=${QN_SK} --qn_scope=${QN_SCOPE} --qn_host=${QN_HOST} --color
     environment:
       - TZ=Asia/Shanghai
       - NODE_ENV=production
