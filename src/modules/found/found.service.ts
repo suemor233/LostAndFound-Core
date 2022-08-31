@@ -21,16 +21,18 @@ export class FoundService {
     foundDto.foundTime = new Date(foundDto.foundTime)
     foundDto.uid = user.id
     foundDto.state = true
+    foundDto.cover = ''
     foundDto.image = []
 
     return this.foundRepository.save(foundDto)
   }
 
-  async addImage(url: string, id: string) {
+  async addImage(url: string, id: string,cover:boolean) {
     const foundUpdate = await this.foundRepository.findOneBy({
       _id: new ObjectId(id),
     } as any)
     foundUpdate.image.push(url)
+    foundUpdate.cover = cover ? url : foundUpdate.cover
     return this.foundRepository.save(foundUpdate)
   }
 
@@ -59,8 +61,8 @@ export class FoundService {
     }
   }
 
-  async uploadPhoto(file: Express.Multer.File, id: any) {
+  async uploadPhoto(file: Express.Multer.File, id: string, cover: boolean) {
     const img = await this.photosService.uploadPhoto(file)
-    return this.addImage(img,id)
+    return this.addImage(img,id,cover)
   }
 }

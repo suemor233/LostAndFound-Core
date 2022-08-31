@@ -25,6 +25,9 @@ export class FoundDto {
 
   @ApiProperty({ nullable:false })
   image?: string[]
+
+  @ApiProperty({ nullable:false })
+  cover?: string
   
   uid?: string
 

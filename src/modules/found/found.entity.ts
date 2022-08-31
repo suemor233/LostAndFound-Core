@@ -24,6 +24,9 @@ export class Found {
   detail: Date;
 
   @Column()
+  cover: string;
+
+  @Column()
   image: string[];
 
   @Column({default:true})

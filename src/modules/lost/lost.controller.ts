@@ -35,6 +35,6 @@ export class LostController {
   @UseInterceptors(FileInterceptor('file'))
   @Auth()
   async uploadPhoto(@UploadedFile() file: Express.Multer.File,@Body() body) {
-    return this.lostService.uploadPhoto(file,body.id);
+    return this.lostService.uploadPhoto(file,body.id,body.cover === '1' );
   }
 }

@@ -23,15 +23,17 @@ export class LostService {
     LostDto.uid = user.id
     LostDto.state = true
     LostDto.image = []
+    LostDto.cover = ''
     // LostDto.image.map(async(item) => await this.photosService.uploadPhoto(item))
     return this.lostRepository.save(LostDto)
   }
 
-  async addImage(url: string, id: string) {
+  async addImage(url: string, id: string,cover:boolean) {
     const lostUpdate = await this.lostRepository.findOneBy({
       _id: new ObjectId(id),
     } as any)
     lostUpdate.image.push(url)
+    lostUpdate.cover = cover ? url : lostUpdate.cover
     return this.lostRepository.save(lostUpdate)
   }
 
@@ -60,8 +62,8 @@ export class LostService {
     }
   }
 
-  async uploadPhoto(file: Express.Multer.File, id: any) {
+  async uploadPhoto(file: Express.Multer.File, id: string,cover:boolean) {
     const img = await this.photosService.uploadPhoto(file)
-    return this.addImage(img,id)
+    return this.addImage(img,id,cover)
   }
 }

@@ -33,6 +33,6 @@ export class FoundController {
   @UseInterceptors(FileInterceptor('file'))
   @Auth()
   async uploadPhoto(@UploadedFile() file: Express.Multer.File,@Body() body) {
-    return this.foundService.uploadPhoto(file,body.id);
+    return this.foundService.uploadPhoto(file,body.id,body.cover === '1' );
   }
 }

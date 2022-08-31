@@ -26,6 +26,9 @@ export class Lost {
   @Column()
   image: string[];
 
+  @Column()
+  cover: string;
+
   @Column('boolean',{default:true})
   state = true
 

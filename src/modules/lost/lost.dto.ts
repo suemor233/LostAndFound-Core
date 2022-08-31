@@ -27,6 +27,10 @@ export class LostDto {
   @ApiProperty({ nullable:false })
   image?: string[]
   
+
+  @ApiProperty({ nullable:false })
+  cover?: string
+
   uid?:string
 
   state?:boolean
