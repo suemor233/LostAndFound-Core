@@ -48,10 +48,9 @@ export class AggregateController {
     @Query('pageSize') pageSize: number,
   ) {
     const lostFound = await this.aggregateService.lostFoundList(pageCurrent, pageSize)
-    console.log(lostFound[0],lostFound[1]);
     return {
       lostFound,
-      totalCount:0
+      totalCount:lostFound[0].lengthCurrent + lostFound[1].lengthCurrent,
     }
   }
 
@@ -90,7 +89,7 @@ export class AggregateController {
     const lostFound = await this.aggregateService.lostFoundList(pageCurrent, pageSize)
     return {
       lostFound,
-      totalCount:lostFound[0].lengthCurrent + lostFound[1].lengthCurrent,
+      totalCount:lostFound[0].lengthCurrent + lostFound[1].lengthCurrent
     }
   }
 }
