@@ -50,8 +50,8 @@ export class LostService {
 
   async total(user: UserModel) {
     const [lostCount, foundCount] = await Promise.all([
-      this.lostModel.count({ uid: user.id, state: true }).lean(),
-      this.lostModel.count({ uid: user.id, state: false }).lean(),
+      this.lostModel.count({ user: user._id, state: true }).lean(),
+      this.lostModel.count({ user: user._id, state: false }).lean(),
     ])
     return { lostCount, foundCount }
   }

@@ -48,9 +48,10 @@ export class FoundService {
 
   async total(user: UserModel) {
     const [UnclaimedCount, claimedCount] = await Promise.all([
-      this.foundModel.count({ uid: user.id, state: true }).lean(),
-      this.foundModel.count({ uid: user.id, state: false }).lean(),
+      this.foundModel.count({ user: user._id, state: true }).lean(),
+      this.foundModel.count({ user: user._id, state: false }).lean(),
     ])
+    console.log(UnclaimedCount,claimedCount);
     return { UnclaimedCount, claimedCount }
   }
 
