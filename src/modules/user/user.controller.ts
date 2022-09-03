@@ -6,13 +6,15 @@ import { UserService } from './user.service'
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '~/common/decorator/auth.decorator'
 import { CurrentUser } from '~/common/decorator/current-user.decorator'
+import { UserModel } from '~/modules/user/user.model';
+
 
 @Controller('user')
 @ApiName
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
   ) {}
 
 
@@ -22,7 +24,7 @@ export class UserController {
   async login(@Body() loginDto: LoginUserDto) {
     const user = await this.userService.login(loginDto)
     return {
-      ...user,
+      user,
       token: await this.authService.signToken(user.openid),
       expiresIn: 7,
     }
@@ -34,7 +36,7 @@ export class UserController {
   })
   @HttpCode(200)
   @Auth()
-  async getUserInfo( @CurrentUser() user: LoginUserDto,) {
+  async getUserInfo( @CurrentUser() user: LoginUserDto) {
     return user
   }
 

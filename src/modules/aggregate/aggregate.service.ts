@@ -10,22 +10,16 @@ export class AggregateService {
     private readonly foundService: FoundService,
   ) {}
 
-  async lostFoundList(pageCurrent: number, pageSize: number) {
-    // const lostPageSize = pageSize / 2
-    // const foundPageSize = pageSize / 2
-    const lostFound = await this.getLostFound(pageCurrent, pageSize)
-    // const lost = lostFound[0]
-    // const found = lostFound[1]
-    // if (lost.lengthCurrent < lostPageSize ) {
-    //   this.foundService.foundList(pageCurrent, pageSize / 2)
-    // }
+  async lostFoundList(pageCurrent: number, pageSize: number,last:boolean) {
+    const lostFound = await this.getLostFound(pageCurrent, pageSize,last)
     return lostFound
   }
 
-  async getLostFound(pageCurrent: number, pageSize: number) {
+  async getLostFound(pageCurrent: number, pageSize: number,last:boolean) {
     return await Promise.all([
-      await this.lostService.lostList(pageCurrent, pageSize / 2),
-      await this.foundService.foundList(pageCurrent, pageSize / 2),
+      await this.lostService.lostList(pageCurrent, pageSize / 2,last),
+      await this.foundService.foundList(pageCurrent, pageSize / 2,last),
     ])
   }
+
 }

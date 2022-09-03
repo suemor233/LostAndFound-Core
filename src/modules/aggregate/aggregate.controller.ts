@@ -1,14 +1,14 @@
 import { Controller, Get, Query } from '@nestjs/common'
-import { ApiOperation } from '@nestjs/swagger'
 
 import { Auth } from '~/common/decorator/auth.decorator'
 import { CurrentUser } from '~/common/decorator/current-user.decorator'
 import { ApiName } from '~/common/decorator/openapi.decorator'
-import { User } from '~/modules/user/user.entity'
 
 import { FoundService } from '../found/found.service'
 import { LostService } from '../lost/lost.service'
 import { AggregateService } from './aggregate.service'
+import { UserModel } from '~/modules/user/user.model';
+import { ApiOperation } from '@nestjs/swagger'
 
 @Controller('aggregate')
 @ApiName
@@ -21,51 +21,53 @@ export class AggregateController {
 
   @Get('/stat')
   @Auth()
-  async aggregate(@CurrentUser() _user: User) {
+  async aggregate(@CurrentUser() _user: UserModel) {
     const tasks = await Promise.allSettled([
       _user,
       this.lostService.total(_user),
       this.foundService.total(_user),
     ])
 
-    const [user, lost, found] = tasks.map((t) => {
+    const [newUser, lost, found] = tasks.map((t) => {
       if (t.status === 'fulfilled') {
         return t.value
       } else {
         return null
       }
     })
+    const user = JSON.parse(JSON.stringify(newUser))
     Object.assign(user, { lost, found })
     return {
-      ...user,
-    }
-  }
-
-  @Get('/list')
-  @ApiOperation({ summary: '分页获取失物信息' })
-  async lostFoundList(
-    @Query('pageCurrent') pageCurrent: number,
-    @Query('pageSize') pageSize: number,
-  ) {
-    const lostFound = await this.aggregateService.lostFoundList(pageCurrent, pageSize)
-    return {
-      lostFound,
-      totalCount:lostFound[0].lengthCurrent + lostFound[1].lengthCurrent,
+      user,
     }
   }
 
   @Get('/last')
   @ApiOperation({ summary: '分页获取失物信息' })
-  async lostFoundList2(
+  async lostFoundList(
     @Query('pageCurrent') pageCurrent: number,
     @Query('pageSize') pageSize: number,
   ) {
-    const lostFound = await this.aggregateService.lostFoundList(pageCurrent, pageSize)
+    const lostFound = await this.aggregateService.lostFoundList(pageCurrent, pageSize,true)
     return {
       lostFound,
-      totalCount:lostFound[0].lengthCurrent + lostFound[1].lengthCurrent,
+      totalCount:lostFound[0].lostData.length + lostFound[1].foundData.length,
     }
   }
+
+  @Get('/early')
+  @ApiOperation({ summary: '最早发布' })
+  async lostFoundLast(
+    @Query('pageCurrent') pageCurrent: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    const lostFound = await this.aggregateService.lostFoundList(pageCurrent, pageSize,false)
+    return {
+      lostFound,
+      totalCount:lostFound[0].lostData.length + lostFound[1].foundData.length,
+    }
+  }
+
 
   @Get('/lost')
   @ApiOperation({ summary: '分页获取失物信息' })
@@ -73,10 +75,10 @@ export class AggregateController {
     @Query('pageCurrent') pageCurrent: number,
     @Query('pageSize') pageSize: number,
   ) {
-    const lostFound = await this.aggregateService.lostFoundList(pageCurrent, pageSize)
+    const lost = await this.lostService.lostList(pageCurrent,pageSize,true)
     return {
-      lostFound,
-      totalCount:lostFound[0].lengthCurrent + lostFound[1].lengthCurrent,
+      lost,
+      totalCount:lost.lostData.length,
     }
   }
 
@@ -86,10 +88,10 @@ export class AggregateController {
     @Query('pageCurrent') pageCurrent: number,
     @Query('pageSize') pageSize: number,
   ) {
-    const lostFound = await this.aggregateService.lostFoundList(pageCurrent, pageSize)
+    const found = await this.foundService.foundList(pageCurrent,pageSize,true)
     return {
-      lostFound,
-      totalCount:lostFound[0].lengthCurrent + lostFound[1].lengthCurrent
+      found,
+      totalCount:found.foundData.length,
     }
   }
 }

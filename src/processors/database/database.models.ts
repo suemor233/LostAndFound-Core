@@ -1,10 +1,12 @@
+import { MongooseModule, SchemaFactory } from '@nestjs/mongoose'
 
-import { User } from '~/modules/user/user.entity';
-import { Lost } from '../../modules/lost/lost.entity';
-import { Found } from '../../modules/found/found.entity';
+import { UserModel } from '~/modules/user/user.model'
 
-export const databaseModels = [
-  User,
-  Lost,
-  Found
-]
+import { FoundModel } from '../../modules/found/found.model'
+import { LostModel } from '../../modules/lost/lost.model'
+
+export const databaseModels = [UserModel, LostModel, FoundModel].map((model:any) =>
+  MongooseModule.forFeature([
+    { name: model.name, schema: SchemaFactory.createForClass(model) },
+  ])
+)

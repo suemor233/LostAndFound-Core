@@ -1,9 +1,9 @@
 import {
-  IsOptional,
   IsString,
 } from 'class-validator'
 
 import { ApiProperty } from '@nestjs/swagger'
+import { UserModel } from '../user/user.model'
 export class LostDto {
   @ApiProperty({ required: true })
   @IsString({ message: '标题不能为空' })
@@ -31,10 +31,11 @@ export class LostDto {
   @ApiProperty({ nullable:false })
   cover?: string
 
-  uid?:string
 
   state?:boolean
 
+  @ApiProperty({ nullable:false })
+  user?: UserModel
 }
 
 

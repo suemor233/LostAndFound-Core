@@ -1,19 +1,13 @@
 import { Global, Module } from '@nestjs/common'
-import { TypeOrmModule } from '@nestjs/typeorm'
+import { MongooseModule } from '@nestjs/mongoose'
 
 import { MONGO_DB } from '~/app.config'
+
 import { databaseModels } from './database.models'
 
-@Module({
-  imports: [
-    TypeOrmModule.forRoot({
-      type: 'mongodb',
-      host: MONGO_DB.host,
-      port: MONGO_DB.port,
-      database: MONGO_DB.dbName,
-      entities: databaseModels,
-    }),
-  ],
-})
 @Global()
+@Module({
+  imports: [MongooseModule.forRoot(MONGO_DB.uri), ...databaseModels],
+  exports: [...databaseModels],
+})
 export class DatabaseModule {}

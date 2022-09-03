@@ -1,6 +1,7 @@
 import { IsString } from 'class-validator'
 
 import { ApiProperty } from '@nestjs/swagger'
+import { UserModel } from '../user/user.model'
 
 export class FoundDto {
   @ApiProperty({ required: true })
@@ -29,6 +30,9 @@ export class FoundDto {
   @ApiProperty({ nullable:false })
   cover?: string
   
+  @ApiProperty({ nullable:false })
+  user?: UserModel
+
   uid?: string
 
   state?: boolean

@@ -1,69 +1,80 @@
-import { ObjectId } from 'bson'
-import { Repository } from 'typeorm'
+import { Model } from 'mongoose'
 
 import { Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
+import { InjectModel } from '@nestjs/mongoose'
 
-import { User } from '../user/user.entity'
+import { UserModel } from '~/modules/user/user.model'
+
+import { PhotosService } from '../photos/photos.service'
 import { LostDto } from './lost.dto'
-import { Lost } from './lost.entity'
-import { PhotosService } from '../photos/photos.service';
+import { LostModel } from './lost.model'
 
 @Injectable()
 export class LostService {
-
   constructor(
-    @InjectRepository(Lost)
-    private lostRepository: Repository<Lost>,
+    @InjectModel(LostModel.name)
+    private readonly lostModel: Model<LostModel>,
     private photosService: PhotosService,
   ) {}
 
-  async save(user: User, LostDto: LostDto) {
+  async save(user: UserModel, LostDto: LostDto) {
     LostDto.lostTime = new Date(LostDto.lostTime)
-    LostDto.uid = user.id
     LostDto.state = true
     LostDto.image = []
     LostDto.cover = ''
-    // LostDto.image.map(async(item) => await this.photosService.uploadPhoto(item))
-    return this.lostRepository.save(LostDto)
+    LostDto.user = user
+    return this.lostModel.create(LostDto)
   }
 
-  async addImage(url: string, id: string,cover:boolean) {
-    const lostUpdate = await this.lostRepository.findOneBy({
-      _id: new ObjectId(id),
-    } as any)
-    lostUpdate.image.push(url)
-    lostUpdate.cover = cover ? url : lostUpdate.cover
-    return this.lostRepository.save(lostUpdate)
+  async addImage(url: string, id: string, cover: boolean) {
+    let lostUpdate
+
+    if (cover) {
+      lostUpdate = await this.lostModel.updateOne(
+        {
+          _id: id,
+        },
+        { $push: { image: url }, $set: { cover: url } },
+      )
+    } else {
+      lostUpdate = await this.lostModel.updateOne(
+        {
+          _id: id,
+        },
+        { $push: { image: url } },
+      )
+    }
+
+    return lostUpdate
   }
 
-  async total(user: User) {
+  async total(user: UserModel) {
     const [lostCount, foundCount] = await Promise.all([
-      this.lostRepository.countBy({ uid: user.id, state: true }),
-      this.lostRepository.countBy({ uid: user.id, state: false }),
+      this.lostModel.count({ uid: user.id, state: true }).lean(),
+      this.lostModel.count({ uid: user.id, state: false }).lean(),
     ])
     return { lostCount, foundCount }
   }
 
-  async lostList(pageCurrent: number, pageSize: number) {
-    const lostData = await this.lostRepository.findAndCount({
-      skip: pageSize * (pageCurrent - 1),
-      take: pageSize,
-    })
-    const totalCount = lostData[1]
+  async lostList(pageCurrent: number, pageSize: number,last:boolean) {
+    const lostData = await this.lostModel
+      .find({ state: true })
+      .skip(pageSize * (pageCurrent - 1))
+      .limit(pageSize)
+      .sort({ _id: `${last ? 'desc' : 'asc'}` })
+      .populate('user')
+      .lean()
+    const totalCount = await this.lostModel.find({ state: true }).count()
     const totalPages = Math.ceil(totalCount / pageSize)
     return {
-      lostData: lostData[0],
-      lengthCurrent: lostData[0].length,
-      pageCurrent,
-      pageSize,
+      lostData,
       totalCount,
       totalPages,
     }
   }
 
-  async uploadPhoto(file: Express.Multer.File, id: string,cover:boolean) {
+  async uploadPhoto(file: Express.Multer.File, id: string, cover: boolean) {
     const img = await this.photosService.uploadPhoto(file)
-    return this.addImage(img,id,cover)
+    return this.addImage(img, id, cover)
   }
 }

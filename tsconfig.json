@@ -28,7 +28,8 @@
       ],
       "~/*": [
         "./src/*"
-      ]
+      ],
+      "mongodb":["node_modules/mongodb"]
     }
   },
   "include": [
