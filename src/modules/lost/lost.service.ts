@@ -11,6 +11,7 @@ import { LostModel } from './lost.model'
 
 @Injectable()
 export class LostService {
+
   constructor(
     @InjectModel(LostModel.name)
     private readonly lostModel: Model<LostModel>,
@@ -76,5 +77,9 @@ export class LostService {
   async uploadPhoto(file: Express.Multer.File, id: string, cover: boolean) {
     const img = await this.photosService.uploadPhoto(file)
     return this.addImage(img, id, cover)
+  }
+
+  async findLostById(id: string) {
+    return  this.lostModel.findOne({_id:id}).populate('user')
   }
 }

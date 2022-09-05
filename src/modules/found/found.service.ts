@@ -51,7 +51,6 @@ export class FoundService {
       this.foundModel.count({ user: user._id, state: true }).lean(),
       this.foundModel.count({ user: user._id, state: false }).lean(),
     ])
-    console.log(UnclaimedCount,claimedCount);
     return { UnclaimedCount, claimedCount }
   }
 
@@ -75,5 +74,8 @@ export class FoundService {
   async uploadPhoto(file: Express.Multer.File, id: string, cover: boolean) {
     const img = await this.photosService.uploadPhoto(file)
     return this.addImage(img, id, cover)
+  }
+  async findFoundById(id: string) {
+    return this.foundModel.findOne({ _id: id }).populate('user')
   }
 }
