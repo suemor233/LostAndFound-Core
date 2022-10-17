@@ -6,7 +6,6 @@ import { UserService } from './user.service'
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '~/common/decorator/auth.decorator'
 import { CurrentUser } from '~/common/decorator/current-user.decorator'
-import { UserModel } from '~/modules/user/user.model';
 
 
 @Controller('user')
