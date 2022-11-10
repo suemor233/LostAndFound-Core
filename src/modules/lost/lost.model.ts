@@ -1,5 +1,5 @@
 import { IsString, IsUrl } from 'class-validator'
-import mongoose, { Document } from 'mongoose'
+import mongoose from 'mongoose'
 
 import { Prop, Schema } from '@nestjs/mongoose'
 import { ApiProperty } from '@nestjs/swagger'

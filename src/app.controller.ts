@@ -1,6 +1,8 @@
-import { Controller, Get } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller, Get } from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
+
 import PKG from '../package.json'
+
 @Controller()
 @ApiTags('Root')
 export class AppController {
@@ -17,5 +19,4 @@ export class AppController {
   ping(): 'pong' {
     return 'pong'
   }
-
 }

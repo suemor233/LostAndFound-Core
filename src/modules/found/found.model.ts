@@ -1,4 +1,4 @@
-import mongoose, { Document } from 'mongoose'
+import mongoose from 'mongoose'
 
 import { Prop, Schema } from '@nestjs/mongoose'
 import { UserModel } from '../user/user.model';

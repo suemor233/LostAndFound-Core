@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common'
@@ -30,6 +31,13 @@ export class LostController {
     return this.lostService.save(user, lostDto)
   }
 
+  @Post('/enter_back')
+  @ApiOperation({ summary: '确认找回' })
+  @Auth()
+  async changeState(@CurrentUser() user: UserModel, @Body('id') id: string) {
+    return this.lostService.changeState(user, id)
+  }
+
   @Get(':id')
   @ApiOperation({ summary: '根据 id 获取丢失信息' })
   async findLostById(@Param('id') id: string) {
@@ -45,10 +53,15 @@ export class LostController {
     }
   }
 
+
+  
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   @Auth()
   async uploadPhoto(@UploadedFile() file: Express.Multer.File, @Body() body) {
     return this.lostService.uploadPhoto(file, body.id, body.cover === '1')
   }
+
 }
+
+

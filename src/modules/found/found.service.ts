@@ -57,9 +57,9 @@ export class FoundService {
   async foundList(pageCurrent: number, pageSize: number, last: boolean) {
     const foundData = await this.foundModel
       .find({ state: true })
+      .sort({ _id: `${last ? 'desc' : 'asc'}` })
       .skip(pageSize * (pageCurrent - 1))
       .limit(pageSize)
-      .sort({ _id: `${last ? 'desc' : 'asc'}` })
       .populate('user')
       .lean()
     const totalCount = await this.foundModel.find({ state: true }).count()

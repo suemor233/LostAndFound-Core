@@ -1,14 +1,14 @@
 import { Controller, Get, Query } from '@nestjs/common'
+import { ApiOperation } from '@nestjs/swagger'
 
 import { Auth } from '~/common/decorator/auth.decorator'
 import { CurrentUser } from '~/common/decorator/current-user.decorator'
 import { ApiName } from '~/common/decorator/openapi.decorator'
+import { UserModel } from '~/modules/user/user.model'
 
 import { FoundService } from '../found/found.service'
 import { LostService } from '../lost/lost.service'
 import { AggregateService } from './aggregate.service'
-import { UserModel } from '~/modules/user/user.model';
-import { ApiOperation } from '@nestjs/swagger'
 
 @Controller('aggregate')
 @ApiName
@@ -48,10 +48,14 @@ export class AggregateController {
     @Query('pageCurrent') pageCurrent: number,
     @Query('pageSize') pageSize: number,
   ) {
-    const lostFound = await this.aggregateService.lostFoundList(pageCurrent, pageSize,true)
+    const lostFound = await this.aggregateService.lostFoundList(
+      pageCurrent,
+      pageSize,
+      true,
+    )
     return {
       lostFound,
-      totalCount:lostFound[0].lostData.length + lostFound[1].foundData.length,
+      totalCount: lostFound[0].lostData.length + lostFound[1].foundData.length,
     }
   }
 
@@ -61,13 +65,16 @@ export class AggregateController {
     @Query('pageCurrent') pageCurrent: number,
     @Query('pageSize') pageSize: number,
   ) {
-    const lostFound = await this.aggregateService.lostFoundList(pageCurrent, pageSize,false)
+    const lostFound = await this.aggregateService.lostFoundList(
+      pageCurrent,
+      pageSize,
+      false,
+    )
     return {
       lostFound,
-      totalCount:lostFound[0].lostData.length + lostFound[1].foundData.length,
+      totalCount: lostFound[0].lostData.length + lostFound[1].foundData.length,
     }
   }
-
 
   @Get('/lost')
   @ApiOperation({ summary: '分页获取失物信息' })
@@ -75,11 +82,8 @@ export class AggregateController {
     @Query('pageCurrent') pageCurrent: number,
     @Query('pageSize') pageSize: number,
   ) {
-    const lost = await this.lostService.lostList(pageCurrent,pageSize,true)
-    return {
-      lost,
-      totalCount:lost.lostData.length,
-    }
+    return  this.lostService.lostList(pageCurrent, pageSize, true)
+    
   }
 
   @Get('/found')
@@ -88,10 +92,10 @@ export class AggregateController {
     @Query('pageCurrent') pageCurrent: number,
     @Query('pageSize') pageSize: number,
   ) {
-    const found = await this.foundService.foundList(pageCurrent,pageSize,true)
+    const found = await this.foundService.foundList(pageCurrent, pageSize, true)
     return {
       found,
-      totalCount:found.foundData.length,
+      totalCount: found.foundData.length,
     }
   }
 }

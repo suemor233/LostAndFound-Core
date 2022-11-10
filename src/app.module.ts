@@ -11,6 +11,7 @@ import { DatabaseModule } from './processors/database/database.module'
 import { HelperModule } from './processors/helper/helper.module'
 import { AggregateModule } from './modules/aggregate/aggregate.module';
 import { PhotosModule } from './modules/photos/photos.module';
+import { DisableModule } from './modules/disable/disable.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { PhotosModule } from './modules/photos/photos.module';
     FoundModule,
     AggregateModule,
     PhotosModule,
+    DisableModule,
   ],
   controllers: [AppController],
   providers: [

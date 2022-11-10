@@ -11,7 +11,6 @@ import { LostModel } from './lost.model'
 
 @Injectable()
 export class LostService {
-
   constructor(
     @InjectModel(LostModel.name)
     private readonly lostModel: Model<LostModel>,
@@ -57,16 +56,18 @@ export class LostService {
     return { lostCount, foundCount }
   }
 
-  async lostList(pageCurrent: number, pageSize: number,last:boolean) {
+  async lostList(pageCurrent: number, pageSize: number, last: boolean) {
+    console.log(pageCurrent, pageSize)
     const lostData = await this.lostModel
       .find({ state: true })
+      .sort({ _id: `${last ? 'desc' : 'asc'}` })
       .skip(pageSize * (pageCurrent - 1))
       .limit(pageSize)
-      .sort({ _id: `${last ? 'desc' : 'asc'}` })
       .populate('user')
       .lean()
     const totalCount = await this.lostModel.find({ state: true }).count()
     const totalPages = Math.ceil(totalCount / pageSize)
+
     return {
       lostData,
       totalCount,
@@ -80,6 +81,18 @@ export class LostService {
   }
 
   async findLostById(id: string) {
-    return  this.lostModel.findOne({_id:id}).populate('user')
+    return this.lostModel.findOne({ _id: id }).populate('user')
+  }
+
+  async changeState(user: UserModel, id: string) {
+    const lost = await this.lostModel.findById(id)
+    if (lost.user == user.id) {
+      return this.lostModel.updateOne(
+        {
+          _id: id,
+        },
+        { $set: { state: false } },
+      )
+    }
   }
 }
