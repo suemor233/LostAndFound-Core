@@ -3,8 +3,8 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
-  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common'
@@ -27,16 +27,24 @@ export class LostController {
   @Post()
   @ApiOperation({ summary: '创建找丢失' })
   @Auth()
-  async login(@CurrentUser() user: UserModel, @Body() lostDto: LostDto) {
-    return this.lostService.save(user, lostDto)
+  async create(@CurrentUser() user: UserModel, @Body() lostDto: LostDto) {
+    return await this.lostService.save(user, lostDto)
+  }
+
+  @Patch(':id')
+  @ApiOperation({ summary: '修改丢失' })
+  @Auth()
+  async update(@CurrentUser() user: UserModel, @Body() lostDto: LostDto,@Param('id') id: string) {
+    return await this.lostService.update(user, lostDto,id)
   }
 
   @Post('/enter_back')
-  @ApiOperation({ summary: '确认找回' })
+  @ApiOperation({ summary: '改变当前状态' })
   @Auth()
-  async changeState(@CurrentUser() user: UserModel, @Body('id') id: string) {
-    return this.lostService.changeState(user, id)
+  async changeState(@CurrentUser() user: UserModel, @Body('id') id: string,@Body('state') state = 0) {
+    return this.lostService.changeState(user, id,state)
   }
+
 
   @Get(':id')
   @ApiOperation({ summary: '根据 id 获取丢失信息' })
@@ -53,14 +61,20 @@ export class LostController {
     }
   }
 
-
-  
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   @Auth()
   async uploadPhoto(@UploadedFile() file: Express.Multer.File, @Body() body) {
     return this.lostService.uploadPhoto(file, body.id, body.cover === '1')
   }
+
+  @Post('/upload/remove')
+  @UseInterceptors(FileInterceptor('file'))
+  @Auth()
+  async removeUploadPhoto(@Body() body) {
+    return this.lostService.removeUploadPhoto(body.id,body.url)
+  }
+
 
 }
 

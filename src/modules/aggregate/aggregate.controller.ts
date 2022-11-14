@@ -77,24 +77,63 @@ export class AggregateController {
   }
 
   @Get('/lost')
-  @ApiOperation({ summary: '分页获取失物信息' })
-  async lostFoundList3(
+  @ApiOperation({ summary: '只看失物' })
+  async onlyLost(
     @Query('pageCurrent') pageCurrent: number,
     @Query('pageSize') pageSize: number,
   ) {
-    return  this.lostService.lostList(pageCurrent, pageSize, true)
-    
+    const lost = await this.lostService.lostList(pageCurrent, pageSize, true)
+    return {
+      ...lost,
+      totalCount: lost.lostData.length,
+    }
+  }
+
+  @Get('/lost/alreary')
+  @ApiOperation({ summary: '已找回的失物' })
+  async lostAlreary(
+    @Query('pageCurrent') pageCurrent: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    const lost = await this.lostService.lostList(
+      pageCurrent,
+      pageSize,
+      true,
+      false,
+    )
+    return {
+      ...lost,
+      totalCount: lost.lostData.length,
+    }
   }
 
   @Get('/found')
-  @ApiOperation({ summary: '分页获取失物信息' })
-  async lostFoundList4(
+  @ApiOperation({ summary: '只看寻物' })
+  async onlyFound(
     @Query('pageCurrent') pageCurrent: number,
     @Query('pageSize') pageSize: number,
   ) {
     const found = await this.foundService.foundList(pageCurrent, pageSize, true)
     return {
-      found,
+      ...found,
+      totalCount: found.foundData.length,
+    }
+  }
+
+  @Get('/found/alreary')
+  @ApiOperation({ summary: '已找到的寻物' })
+  async foundAlreay(
+    @Query('pageCurrent') pageCurrent: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    const found = await this.foundService.foundList(
+      pageCurrent,
+      pageSize,
+      true,
+      false,
+    )
+    return {
+      ...found,
       totalCount: found.foundData.length,
     }
   }
