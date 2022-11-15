@@ -5,6 +5,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common'
@@ -23,6 +24,42 @@ import { FoundService } from './found.service'
 @ApiName
 export class FoundController {
   constructor(private readonly foundService: FoundService) {}
+
+  @Get('/list')
+  @ApiOperation({ summary: '当前用户寻物' })
+  @Auth()
+  async onlyFound(
+    @Query('pageCurrent') pageCurrent: number,
+    @Query('pageSize') pageSize: number,
+    @CurrentUser() user: UserModel
+  ) {
+    const found = await this.foundService.foundList(pageCurrent, pageSize, true,true,user)
+    return {
+      ...found,
+      totalCount: found.foundData.length,
+    }
+  }
+
+  @Get('/alreary')
+  @ApiOperation({ summary: '当前用户已找到的寻物' })
+  @Auth()
+  async foundAlreay(
+    @Query('pageCurrent') pageCurrent: number,
+    @Query('pageSize') pageSize: number,
+    @CurrentUser() user: UserModel
+  ) {
+    const found = await this.foundService.foundList(
+      pageCurrent,
+      pageSize,
+      true,
+      false,
+      user
+    )
+    return {
+      ...found,
+      totalCount: found.foundData.length,
+    }
+  }
 
   @Post()
   @ApiOperation({ summary: '创建找丢失' })
@@ -75,4 +112,5 @@ export class FoundController {
     
     return this.foundService.findFoundById(id)
   }
+
 }

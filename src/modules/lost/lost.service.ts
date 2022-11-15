@@ -65,15 +65,27 @@ export class LostService {
     pageSize: number,
     last: boolean,
     state = true,
+    user?: UserModel,
   ) {
-  
-    const lostData = await this.lostModel
-      .find({ state })
-      .sort({ _id: `${last ? 'desc' : 'asc'}` })
-      .skip(pageSize * (pageCurrent - 1))
-      .limit(pageSize)
-      .populate('user')
-      .lean()
+    let lostData
+    if (user) {
+      lostData = await this.lostModel
+        .find({ state, user: user._id })
+        .sort({ _id: `${last ? 'desc' : 'asc'}` })
+        .skip(pageSize * (pageCurrent - 1))
+        .limit(pageSize)
+        .populate('user')
+        .lean()
+    } else {
+      lostData = await this.lostModel
+        .find({ state })
+        .sort({ _id: `${last ? 'desc' : 'asc'}` })
+        .skip(pageSize * (pageCurrent - 1))
+        .limit(pageSize)
+        .populate('user')
+        .lean()
+    }
+
     const totalCount = await this.lostModel.find({ state }).count()
     const totalPages = Math.ceil(totalCount / pageSize)
 
@@ -97,24 +109,24 @@ export class LostService {
     const lost = await this.lostModel.findById(id)
     await this.lostModel.findByIdAndUpdate(id, {
       $pull: { image: url },
-      $set: { cover: `${lost.cover == url ? lost.image[1] || '' : lost.cover}` },
+      $set: {
+        cover: `${lost.cover == url ? lost.image[1] || '' : lost.cover}`,
+      },
     })
-   
-
   }
 
   async findLostById(id: string) {
     return this.lostModel.findOne({ _id: id }).populate('user')
   }
 
-  async changeState(user: UserModel, id: string,state:number) {
+  async changeState(user: UserModel, id: string, state: number) {
     const lost = await this.lostModel.findById(id)
     if (lost.user == user.id) {
       return this.lostModel.updateOne(
         {
           _id: id,
         },
-        { $set: { state:!!state } },
+        { $set: { state: !!state } },
       )
     }
   }

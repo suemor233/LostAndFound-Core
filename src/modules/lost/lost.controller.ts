@@ -5,6 +5,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common'
@@ -23,6 +24,43 @@ import { LostService } from './lost.service'
 @ApiName
 export class LostController {
   constructor(private readonly lostService: LostService) {}
+
+  @Get('/list')
+  @ApiOperation({ summary: '当前用户的失物' })
+  @Auth()
+  async onlyLost(
+    @Query('pageCurrent') pageCurrent: number,
+    @Query('pageSize') pageSize: number,
+
+  ) {
+    const lost = await this.lostService.lostList(pageCurrent, pageSize, true, true)
+    return {
+      ...lost,
+      totalCount: lost.lostData.length,
+      
+    }
+  }
+
+  @Get('/alreary')
+  @ApiOperation({ summary: '当前用户已找回的失物' })
+  @Auth()
+  async lostAlreary(
+    @Query('pageCurrent') pageCurrent: number,
+    @Query('pageSize') pageSize: number,
+    @CurrentUser() user: UserModel
+  ) {
+    const lost = await this.lostService.lostList(
+      pageCurrent,
+      pageSize,
+      true,
+      false,
+      user
+    )
+    return {
+      ...lost,
+      totalCount: lost.lostData.length,
+    }
+  }
 
   @Post()
   @ApiOperation({ summary: '创建找丢失' })
@@ -76,6 +114,7 @@ export class LostController {
   }
 
 
+  
 }
 
 
