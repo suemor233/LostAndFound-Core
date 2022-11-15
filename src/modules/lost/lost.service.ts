@@ -97,8 +97,10 @@ export class LostService {
     const lost = await this.lostModel.findById(id)
     await this.lostModel.findByIdAndUpdate(id, {
       $pull: { image: url },
-      $set: { cover: `${lost.cover == url ? '' : lost.cover}` },
+      $set: { cover: `${lost.cover == url ? lost.image[1] || '' : lost.cover}` },
     })
+   
+
   }
 
   async findLostById(id: string) {
