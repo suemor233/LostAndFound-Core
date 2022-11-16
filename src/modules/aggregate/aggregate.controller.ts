@@ -137,4 +137,13 @@ export class AggregateController {
       totalCount: found.foundData.length,
     }
   }
+
+  @Get('/search')
+  @ApiOperation({ summary: '已找到的寻物' })
+  async search(@Query('search') search: string) {
+    return  Promise.all([
+      this.lostService.search(search),
+      this.foundService.search(search),
+    ])
+  }
 }

@@ -123,4 +123,11 @@ export class FoundService {
       )
     }
   }
+
+  async search(search: string) {
+    const reg = new RegExp(search, 'i')
+    return this.foundModel.find({
+      $or: [{ title: reg }, { category: reg }, { detail: reg }],
+    })
+  }
 }
