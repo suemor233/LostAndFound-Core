@@ -31,9 +31,9 @@ export class LostController {
   async onlyLost(
     @Query('pageCurrent') pageCurrent: number,
     @Query('pageSize') pageSize: number,
-
+    @CurrentUser() user: UserModel
   ) {
-    const lost = await this.lostService.lostList(pageCurrent, pageSize, true, true)
+    const lost = await this.lostService.lostList(pageCurrent, pageSize, true, true,user)
     return {
       ...lost,
       totalCount: lost.lostData.length,
