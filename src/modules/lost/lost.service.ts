@@ -134,7 +134,7 @@ export class LostService {
   async search(search: string) {
     const reg = new RegExp(search, 'i')
     return this.lostModel.find({
-      $or: [{ title: reg }, { category: reg }, { detail: reg }],
+      $or: [{ title: reg }, { category: reg }, { detail: reg },{ place: reg }],
     })
   }
 }

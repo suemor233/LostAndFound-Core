@@ -24,6 +24,10 @@ export class LostDto {
   @IsString({ message: '详情不能为空' })
   detail?: string
 
+  @ApiProperty({ required: true })
+  @IsString({ message: '丢失地点不能为空' })
+  place?: string
+
   @ApiProperty({ nullable:false })
   image?: string[]
   

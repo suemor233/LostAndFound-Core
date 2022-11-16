@@ -37,6 +37,9 @@ export class FoundModel  {
   image: string[];
 
   @Prop()
+  place: string
+
+  @Prop()
   cover: string;
 
   @Prop({default:true})

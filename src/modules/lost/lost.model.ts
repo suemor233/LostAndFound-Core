@@ -42,6 +42,9 @@ export class LostModel  {
   category: string
 
   @Prop()
+  place: string
+
+  @Prop()
   lostTime: Date
 
   @Prop()

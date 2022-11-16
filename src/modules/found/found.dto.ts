@@ -35,5 +35,9 @@ export class FoundDto {
 
   uid?: string
 
+  @ApiProperty({ required: true })
+  @IsString({ message: '捡到地点不能为空' })
+  place?: string
+
   state?: boolean
 }
