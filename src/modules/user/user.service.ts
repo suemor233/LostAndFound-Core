@@ -7,17 +7,21 @@ import {
 
 import { HttpService } from '~/processors/helper/helper.http.service'
 
-import { LoginUserDto } from './user.dto'
+import { LoginUserDto, UpdateLoginUserDto } from './user.dto'
 import { WX_SECRET } from '~/app.config'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { UserModel } from '~/modules/user/user.model';
+import { PhotosService } from '../photos/photos.service'
 @Injectable()
 export class UserService {
+
+
   constructor(
     @InjectModel(UserModel.name)
     private readonly userModel: Model<UserModel>,
     private readonly httpService: HttpService,
+    private photosService: PhotosService,
   )
    {}
 
@@ -69,7 +73,13 @@ export class UserService {
     )
   }
 
-  patchUserData(user: LoginUserDto, body: LoginUserDto) {
-    
+  patchUserData(user: UpdateLoginUserDto, currentUser: LoginUserDto) {
+    return this.userModel.updateOne({ _id: currentUser.id}, user)
+  }
+
+  async uploadAvatar(file: Express.Multer.File, user: LoginUserDto) {
+    const url = await this.photosService.uploadPhoto(file)
+ 
+    return this.userModel.updateOne({ _id: user.id}, { avatarUrl: url })
   }
 }

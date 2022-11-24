@@ -18,4 +18,11 @@ export class LoginUserDto {
 }
 
 
+export class UpdateLoginUserDto {
 
+
+  @ApiProperty({ required: true })
+  @IsString({ message: '用户名' })
+  nickName?: string
+
+}
